@@ -3,7 +3,7 @@ import logo from '../assets/logo.svg';
 
 export const Logo = () => {
   return (
-    <a href={routes.root}>
+    <a href={routes.root} style={{ display: 'flex' }}>
       <img src={logo} alt='Studio' />
     </a>
   );

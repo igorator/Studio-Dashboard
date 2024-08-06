@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
-import { Menu } from 'antd';
+import { FolderOutlined, SmileOutlined, TeamOutlined } from '@ant-design/icons';
+import { Menu, MenuProps } from 'antd';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { routes } from '../../data/routes-data';
+import { routes } from '../data/routes-data';
 
-const navigation = [
-  { label: 'Projects', key: routes.projects },
-  { label: 'Offers', key: routes.offers },
-  { label: 'Team', key: routes.team },
+type MenuItem = Required<MenuProps>['items'][number];
+
+const navigation: MenuItem[] = [
+  { label: 'Projects', key: routes.projects, icon: <FolderOutlined /> },
+  { label: 'Offers', key: routes.offers, icon: <SmileOutlined /> },
+  { label: 'Team', key: routes.team, icon: <TeamOutlined /> },
 ];
 
 export function Sidemenu() {
@@ -26,10 +29,13 @@ export function Sidemenu() {
 
   return (
     <Menu
-      style={{ backgroundColor: 'transparent', border: 'none' }}
-      mode='inline'
+      style={{
+        background: `var(--primary-background)`,
+        border: 'none',
+      }}
       selectedKeys={[selectedKey]}
       items={navigation}
+      mode='inline'
       onClick={handleMenuClick}
     />
   );

@@ -7,4 +7,7 @@ body {
   background: black;
   color: white;
   font-family: 'Geist Mono Variable';
+
+  --default-border: 0.7px solid rgba(255, 255, 255, 0.3);
+  --primary-background: transparent;
 }

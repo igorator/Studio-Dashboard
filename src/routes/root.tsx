@@ -1,20 +1,67 @@
-import { Sidebar } from '../components/Sidebar/Sidebar';
-import { Content } from '../components/Content/Content';
+import { useAppSelector } from '../redux/hooks/useMenuCollapse';
+import { Layout } from 'antd';
+import { Sidemenu } from '../components/Sidemenu';
 import { Outlet } from 'react-router-dom';
+import { Logo } from '../components/Logo';
+import { MenuToggleCollapse } from '../components/MenuToggleCollapse';
 
-import { Header } from '../components/Header/Header';
-import { Flex } from 'antd';
+const { Header, Content, Footer, Sider } = Layout;
+
+const layoutStyle = {
+  overflow: 'hidden',
+  width: '100%',
+  height: '100dvh',
+};
 
 export default function Root() {
+  const collapsed = useAppSelector((state) => state.collapse.collapsed);
+
   return (
-    <Flex vertical style={{ height: '100dvh' }}>
-      <Header />
-      <Flex style={{ height: '100%' }}>
-        <Sidebar />
-        <Content>
+    <Layout style={layoutStyle}>
+      <Header
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          backgroundColor: `var(--primary-background)`,
+          borderBottom: `var(--default-border)`,
+          padding: '0 20px',
+        }}
+      >
+        <Logo />
+      </Header>
+      <Layout>
+        <Sider
+          collapsed={collapsed}
+          style={{
+            backgroundColor: `var(--primary-background)`,
+            borderRight: 'var(--default-border)',
+            paddingTop: '24px',
+          }}
+        >
+          <MenuToggleCollapse />
+          <Sidemenu />
+        </Sider>
+        <Content
+          style={{
+            backgroundColor: 'black',
+            backgroundImage: 'radial-gradient(#2D2D2D 1px, transparent 1px)',
+            backgroundAttachment: 'fixed',
+            backgroundSize: '26px 26px',
+          }}
+        >
           <Outlet />
         </Content>
-      </Flex>
-    </Flex>
+      </Layout>
+      <Footer
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          borderTop: `var(--default-border)`,
+          padding: '24px 24px',
+        }}
+      ></Footer>
+    </Layout>
   );
 }

@@ -25,7 +25,16 @@ export default function ErrorPage() {
   }
 
   return (
-    <div id='error-page'>
+    <div
+      id='error-page'
+      style={{
+        height: '100svh',
+        width: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
       <h1>Oops!</h1>
       <p>
         <i>{errorStatusText || errorMessage}</i>
