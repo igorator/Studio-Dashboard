@@ -1,0 +1,56 @@
+@import url('non.geist/mono');
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  color: white;
+  font-family: 'Geist Mono Variable';
+  --default-blur: blur(2px);
+  --default-padding-lg: 48px;
+  --default-padding-sm: 24px;
+  --primary-background: transparent;
+  background-color: black;
+}
+
+.primary-layout {
+  height: 100dvh;
+  overflow: hidden;
+  width: 100%;
+}
+
+.secondary-layout {
+  background-color: var(--primary-background);
+}
+
+.header {
+  align-items: center;
+  background-color: var(--primary-background);
+  backdrop-filter: var(--default-blur);
+  display: flex;
+  justify-content: space-between;
+  padding: 0 var(--default-padding-sm);
+}
+
+.sider {
+  padding-left: 10px;
+  background-color: var(--primary-background) !important;
+  backdrop-filter: var(--default-blur);
+  padding-top: var(--default-padding-sm);
+}
+
+.content {
+  align-items: stretch;
+  display: flex;
+  padding: var(--default-padding-sm);
+  backdrop-filter: var(--default-blur);
+}
+
+.footer {
+  align-items: center;
+  background-color: var(--primary-background);
+  backdrop-filter: var(--default-blur);
+  display: flex;
+  justify-content: center;
+  padding: var(--default-padding-sm);
+}
