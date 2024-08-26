@@ -16,6 +16,7 @@ import {
   Login,
   Leads,
   Dashboard,
+  ProjectDetail,
 } from './routes/routes';
 import { routes } from './data/routes-config';
 import { Provider } from 'react-redux';
@@ -24,32 +25,38 @@ import { ThemeProvider } from './components/Theme/ThemeProvider';
 
 const router = createBrowserRouter([
   {
-    path: routes.root,
+    path: routes.root.path,
     element: <Root />,
     errorElement: <ErrorPage />,
     children: [
       {
-        path: routes.root,
-        element: <Navigate to={routes.dashboard} replace />,
+        path: routes.root.path,
+        element: <Navigate to={routes.dashboard.path} replace />,
       },
       {
-        path: routes.dashboard,
+        path: routes.dashboard.path,
         element: <Dashboard />,
       },
       {
-        path: routes.projects,
+        path: routes.projects.path,
         element: <Projects />,
+        children: [
+          {
+            path: ':id',
+            element: <ProjectDetail />,
+          },
+        ],
       },
       {
-        path: routes.offers,
+        path: routes.offers.path,
         element: <Offers />,
       },
       {
-        path: routes.team,
+        path: routes.team.path,
         element: <Team />,
       },
       {
-        path: routes.leads,
+        path: routes.leads.path,
         element: <Leads />,
       },
     ],

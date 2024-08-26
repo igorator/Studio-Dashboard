@@ -1,12 +1,18 @@
 export type Project = {
   id: string;
-  url: URL;
+  url: string;
   title: string;
   description: string;
   cover: string;
-  sreens: string[];
+  screens: string[];
   createdDate: Date;
   editedAtDate: Date;
+};
+
+export type ProjectState = {
+  project: Project | null;
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  error: string | null;
 };
 
 export type TeamMember = {
@@ -39,3 +45,10 @@ export type User = {
   id: string;
   name: string;
 };
+
+export enum LoadingState {
+  Idle = 'idle',
+  Loading = 'loading',
+  Success = 'success',
+  Error = 'error',
+}

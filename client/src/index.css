@@ -42,6 +42,8 @@ body {
 .content {
   align-items: stretch;
   display: flex;
+  flex-direction: column;
+  gap: 16px;
   padding: var(--default-padding-sm);
   backdrop-filter: var(--default-blur);
 }

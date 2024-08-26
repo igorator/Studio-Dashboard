@@ -1,3 +1,4 @@
+import { Flex } from 'antd';
 import { useRouteError } from 'react-router-dom';
 
 type ErrorWithMessage = {
@@ -25,20 +26,22 @@ export default function ErrorPage() {
   }
 
   return (
-    <div
+    <Flex
       id='error-page'
+      vertical
+      align='center'
+      justify='center'
+      gap={16}
       style={{
         height: '100svh',
         width: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
       }}
     >
+      {' '}
       <h1>Oops!</h1>
       <p>
         <i>{errorStatusText || errorMessage}</i>
       </p>
-    </div>
+    </Flex>
   );
 }

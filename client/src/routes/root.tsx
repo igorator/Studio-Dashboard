@@ -1,5 +1,6 @@
 import { useAppSelector } from '../redux/hooks';
 import { Layout } from 'antd';
+import { Breadcrumbs } from '../components/Breadcrumbs';
 import { Sidemenu } from '../components/Sidemenu';
 import { Outlet } from 'react-router-dom';
 import { Logo } from '../components/Logo';
@@ -9,7 +10,7 @@ import '../index.css';
 
 const { Header, Content, Footer, Sider } = Layout;
 
-export default function Root() {
+export function Root() {
   const collapsed = useAppSelector((state) => state.collapse.collapsed);
   const darkMode = useAppSelector((state) => state.theme.darkMode);
 
@@ -33,6 +34,7 @@ export default function Root() {
           <Sidemenu />
         </Sider>
         <Content className='content'>
+          <Breadcrumbs />
           <Outlet />
         </Content>
       </Layout>

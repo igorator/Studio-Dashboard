@@ -1,8 +1,15 @@
 const express = require('express');
-const { connectDB } = require('./database');
+const cors = require('cors'); // Import the CORS middleware
+const { connectDB } = require('./config/database');
 const projectRoutes = require('./routes/projectRoutes');
 
 const app = express();
+
+app.use(
+  cors({
+    origin: ['http://localhost:5173', 'https://www.3mpq.com'],
+  }),
+);
 
 app.use(express.json());
 

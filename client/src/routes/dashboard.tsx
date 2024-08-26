@@ -1,5 +1,5 @@
-import { Card } from 'antd';
+import { WrapperCard } from '../components/Cards/WrapperCard';
 
-export default function Dashboard() {
-  return <Card style={{ width: '100%' }} title={'Dashboard'}></Card>;
+export function Dashboard() {
+  return <WrapperCard title='Dashboard'>Dashboard</WrapperCard>;
 }

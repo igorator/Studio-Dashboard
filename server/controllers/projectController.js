@@ -4,6 +4,7 @@ exports.getAllProjects = async (req, res) => {
   try {
     const projects = await Project.findAll();
     res.json(projects);
+    console.log(res);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

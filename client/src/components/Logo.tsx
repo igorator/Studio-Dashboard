@@ -8,7 +8,7 @@ export const Logo = () => {
   const darkMode = useSelector((state: RootState) => state.theme.darkMode);
 
   return (
-    <Link to={routes.dashboard} style={{ display: 'flex' }}>
+    <Link to={routes.dashboard.path} style={{ display: 'flex' }}>
       <img
         src={logo}
         alt='Studio'
