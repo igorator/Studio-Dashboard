@@ -1,15 +1,17 @@
-const { DataTypes } = require('sequelize');
-const { sequelize } = require('../config/database');
+const { DataTypes } = require("sequelize");
+const { sequelize } = require("../config/database");
 
-const Project = sequelize.define('Project', {
+const Project = sequelize.define("Project", {
   url: { type: DataTypes.STRING, allowNull: false },
-  title: { type: DataTypes.STRING, allowNull: false },
-  description: { type: DataTypes.TEXT, allowNull: false },
+  title_ua: { type: DataTypes.STRING, allowNull: false },
+  title_eng: { type: DataTypes.STRING, allowNull: false },
+  description_ua: { type: DataTypes.TEXT, allowNull: false },
+  description_eng: { type: DataTypes.TEXT, allowNull: false },
   cover: { type: DataTypes.STRING, allowNull: false },
   screens: { type: DataTypes.ARRAY(DataTypes.STRING) },
-  createdDate: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
-  editedAtDate: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
-  isSlider: { type: DataTypes.BOOLEAN, defaultValue: false, allowNull: true },
+  created_date: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+  edited_at_date: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+  is_slider: { type: DataTypes.BOOLEAN, defaultValue: false, allowNull: true },
 });
 
 module.exports = Project;
