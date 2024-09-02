@@ -1,13 +1,5 @@
-// src/index.tsx
-import './index.css';
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { App } from 'antd';
-import { RouterProvider } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { store } from './redux/store';
-import { ThemeProvider } from './components/Theme/ThemeProvider';
-import ErrorPage from './error-page';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
+import ErrorPage from '../error-page';
 import {
   Root,
   Projects,
@@ -24,9 +16,9 @@ import {
   TeamMemberCreate,
   TeamMembersReorder,
   LeadDetails,
-} from './routes/routes';
-import { createBrowserRouter, Navigate } from 'react-router-dom';
-import { routes } from './data/routes-config';
+} from '../routes/routes';
+
+import { routes } from './routes-config';
 
 export const router = createBrowserRouter([
   {
@@ -105,15 +97,3 @@ export const router = createBrowserRouter([
     element: <Login />,
   },
 ]);
-
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <ThemeProvider>
-        <App>
-          <RouterProvider router={router} />
-        </App>
-      </ThemeProvider>
-    </Provider>
-  </React.StrictMode>,
-);

@@ -1,5 +1,9 @@
-import { WrapperCard } from '../../components/Cards/WrapperCard';
+import { WrapperCard } from '../../components/Cards/WrapperCard/WrapperCard';
 
 export function Leads() {
-  return <WrapperCard title={'Leads'}>Leads</WrapperCard>;
+  return (
+    <WrapperCard title={'Leads'} entityType='leads'>
+      Leads
+    </WrapperCard>
+  );
 }

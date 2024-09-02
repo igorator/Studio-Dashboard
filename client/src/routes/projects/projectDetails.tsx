@@ -1,30 +1,25 @@
-import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card, Spin, Alert } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '../../redux/store';
-import { fetchProjectById } from '../../redux/slices/projectSlice';
+import { useGetProjectByIdQuery } from '../../redux/services/projectApi';
 
-export function ProjectDetail() {
+export function ProjectDetails() {
   const { id } = useParams<{ id: string }>();
-  const dispatch = useDispatch<AppDispatch>();
-  const { project, status, error } = useSelector(
-    (state: RootState) => state.project,
-  );
 
-  useEffect(() => {
-    if (id) {
-      dispatch(fetchProjectById(id));
-    }
-  }, [id, dispatch]);
+  const { data: project, error, isLoading } = useGetProjectByIdQuery(id!);
 
-  if (status === 'loading') return <Spin size='large' />;
-  if (status === 'failed')
-    return <Alert message='Error' description={error} type='error' />;
+  if (isLoading) return <Spin size='large' />;
+  if (error)
+    return (
+      <Alert
+        message='Error'
+        description='Failed to fetch project'
+        type='error'
+      />
+    );
   if (!project) return <p>Project not found</p>;
 
   return (
-    <Card title={project.title} style={{ marginTop: '16px' }}>
+    <Card title={project.title} style={{ height: '100%', marginTop: '20px' }}>
       <img alt={project.title} src={project.cover} style={{ width: '100%' }} />
       <p>{project.description}</p>
     </Card>

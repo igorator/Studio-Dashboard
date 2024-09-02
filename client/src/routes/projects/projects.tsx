@@ -1,47 +1,30 @@
-import { useEffect, useState } from 'react';
-import { Flex, Alert } from 'antd';
-import { getProjects } from '../../api/projects/getProjects';
-import { Project } from '../../data/types';
+import { Alert, Flex } from 'antd';
 import { Outlet, useLocation } from 'react-router-dom';
-import { LoadingState } from '../../data/types';
-import { WrapperCard } from '../../components/Cards/WrapperCard';
+import { useGetProjectsQuery } from '../../redux/services/projectApi';
+import { WrapperCard } from '../../components/Cards/WrapperCard/WrapperCard';
 import { ProjectCard } from '../../components/Cards/ProjectCard';
 import { ProjectSkeleton } from '../../components/Skeletons/ProjectSkeleton';
+import { routes } from '../../data/routes-config';
 
 export function Projects() {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [status, setStatus] = useState<LoadingState>(LoadingState.Idle);
   const location = useLocation();
-  const isDetailPage = location.pathname.includes('/projects/');
+  const isDetailPage = location.pathname.includes(`${routes.projects.path}/`);
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      setStatus(LoadingState.Loading);
-      try {
-        const data = await getProjects();
-        setProjects(data);
-        setStatus(LoadingState.Success);
-      } catch (error) {
-        setStatus(LoadingState.Error);
-      }
-    };
-
-    fetchProjects();
-  }, []);
+  const { data: projects = [], error, isLoading } = useGetProjectsQuery();
 
   if (isDetailPage) return <Outlet />;
 
   return (
-    <WrapperCard title='Projects'>
-      {status === LoadingState.Loading && (
+    <WrapperCard title='Projects' entityType='projects'>
+      {isLoading && (
         <Flex gap={16} wrap justify='space-between'>
-          {Array.from({ length: 5 }).map(() => (
-            <ProjectSkeleton />
+          {new Array(5).fill(null).map((_, index) => (
+            <ProjectSkeleton key={index} />
           ))}
         </Flex>
       )}
 
-      {status === LoadingState.Error && (
+      {error && (
         <Alert
           message='Error'
           description='Failed to fetch projects'
@@ -49,10 +32,10 @@ export function Projects() {
         />
       )}
 
-      {status === LoadingState.Success && (
+      {!isLoading && !error && (
         <Flex>
           {projects.map((project) => (
-            <ProjectCard project={project} />
+            <ProjectCard key={project.id} project={project} />
           ))}
         </Flex>
       )}

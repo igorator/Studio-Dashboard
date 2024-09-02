@@ -1,3 +1,15 @@
+export type EntityType = 'projects' | 'team' | 'offers' | 'leads';
+
+export type WrapperCardProps = {
+  title: string;
+  entityType: EntityType;
+  children: React.ReactNode;
+};
+
+export type WrapperCardControlsProps = {
+  entityType: EntityType;
+};
+
 export type Project = {
   id: string;
   url: string;
@@ -7,12 +19,6 @@ export type Project = {
   screens: string[];
   createdDate: Date;
   editedAtDate: Date;
-};
-
-export type ProjectState = {
-  project: Project | null;
-  status: 'idle' | 'loading' | 'succeeded' | 'failed';
-  error: string | null;
 };
 
 export type TeamMember = {
@@ -33,7 +39,7 @@ export type Offer = {
 
 export type Lead = {
   id: string;
-  name: string;
+  title: string;
   email: string;
   phone: number;
   company: string;
