@@ -1,4 +1,10 @@
-export type EntityType = 'projects' | 'team' | 'offers' | 'leads';
+export type EntityType =
+  | 'general'
+  | 'dashboard'
+  | 'projects'
+  | 'team'
+  | 'offers'
+  | 'leads';
 
 export type WrapperCardProps = {
   title: string;
@@ -12,11 +18,15 @@ export type WrapperCardControlsProps = {
 
 export type Project = {
   id: string;
-  url: string;
-  title: string;
-  description: string;
-  cover: string;
-  screens: string[];
+  title_eng: string;
+  description_eng: string;
+  title_ua: string;
+  description_ua: string;
+  social_urls: { [key: string]: string | null };
+  cover: File;
+  screens: File[];
+  isShowOnSite: boolean;
+  isOnHeroSlider: boolean;
   createdDate: Date;
   editedAtDate: Date;
 };

@@ -16,7 +16,11 @@ export const WrapperCardControls = ({
     navigate(`/${entityType}/reorder`);
   };
 
-  if (entityType === 'leads') {
+  if (
+    entityType === 'leads' ||
+    entityType === 'dashboard' ||
+    entityType === 'general'
+  ) {
     return null;
   }
 

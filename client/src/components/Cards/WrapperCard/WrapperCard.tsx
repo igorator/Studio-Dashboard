@@ -6,7 +6,11 @@ export function WrapperCard({ title, entityType, children }: WrapperCardProps) {
   return (
     <Card
       title={title}
-      style={{ width: '100%', height: '100%', marginTop: 20 }}
+      style={{
+        width: '100%',
+        height: '100%',
+        overflow: 'hidden',
+      }}
       extra={<WrapperCardControls entityType={entityType} />}
     >
       {children}

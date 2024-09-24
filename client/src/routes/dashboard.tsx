@@ -1,5 +1,9 @@
 import { WrapperCard } from '../components/Cards/WrapperCard/WrapperCard';
 
 export function Dashboard() {
-  return <WrapperCard title='Dashboard'>Dashboard</WrapperCard>;
+  return (
+    <WrapperCard title='Dashboard' entityType='dashboard'>
+      Dashboard
+    </WrapperCard>
+  );
 }

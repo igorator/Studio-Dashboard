@@ -8,17 +8,26 @@ import { routes } from '../../data/routes-config';
 
 export function Projects() {
   const location = useLocation();
-  const isDetailPage = location.pathname.includes(`${routes.projects.path}/`);
+  const isDetailsPage = location.pathname.includes(`${routes.projects.path}/`);
 
-  const { data: projects = [], error, isLoading } = useGetProjectsQuery();
+  const {
+    data: projects = [],
+    error,
+    isLoading,
+    refetch,
+  } = useGetProjectsQuery();
 
-  if (isDetailPage) return <Outlet />;
+  const handleProjectDelete = () => {
+    refetch();
+  };
+
+  if (isDetailsPage) return <Outlet />;
 
   return (
     <WrapperCard title='Projects' entityType='projects'>
       {isLoading && (
         <Flex gap={16} wrap justify='space-between'>
-          {new Array(5).fill(null).map((_, index) => (
+          {new Array(6).fill(null).map((_, index) => (
             <ProjectSkeleton key={index} />
           ))}
         </Flex>
@@ -33,9 +42,13 @@ export function Projects() {
       )}
 
       {!isLoading && !error && (
-        <Flex>
+        <Flex wrap gap={32}>
           {projects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
+            <ProjectCard
+              key={project.id}
+              project={project}
+              onDelete={handleProjectDelete}
+            />
           ))}
         </Flex>
       )}

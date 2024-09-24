@@ -4,18 +4,30 @@ exports.getAllProjects = async (req, res) => {
   try {
     const projects = await Project.findAll();
     res.json(projects);
-    console.log(res);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
 
 exports.createProject = async (req, res) => {
+  console.log(req);
   try {
-    const project = await Project.create(req.body);
+    const projectData = {
+      title_eng: req.body.title_eng,
+      description_eng: req.body.description_eng,
+      title_ua: req.body.title_ua,
+      description_ua: req.body.description_ua,
+      cover: req.body.cover,
+      screens: req.body.screens,
+      social_urls: req.body.social_urls,
+      isShowedOnSite: req.body.isShowedOnSite,
+      isOnHeroSlider: req.body.isOnHeroSlider,
+    };
+
+    const project = await Project.create(projectData);
     res.status(201).json(project);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 

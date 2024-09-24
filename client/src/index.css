@@ -14,7 +14,7 @@ body {
 }
 
 .primary-layout {
-  height: 100dvh;
+  min-height: 100dvh;
   overflow: hidden;
   width: 100%;
 }
@@ -24,11 +24,11 @@ body {
 }
 
 .header {
+  display: flex;
   align-items: center;
+  justify-content: space-between;
   background-color: var(--primary-background);
   backdrop-filter: var(--default-blur);
-  display: flex;
-  justify-content: space-between;
   padding: 0 var(--default-padding-sm);
 }
 
@@ -40,19 +40,38 @@ body {
 }
 
 .content {
-  align-items: stretch;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  align-items: stretch;
+  gap: 36px;
   padding: var(--default-padding-sm);
   backdrop-filter: var(--default-blur);
 }
 
 .footer {
+  display: flex;
   align-items: center;
   background-color: var(--primary-background);
   backdrop-filter: var(--default-blur);
-  display: flex;
   justify-content: center;
   padding: var(--default-padding-sm);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #666;
+  border-radius: 8px;
+  transition: background-color 0.6s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #444;
 }

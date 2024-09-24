@@ -19,9 +19,16 @@ export function ProjectDetails() {
   if (!project) return <p>Project not found</p>;
 
   return (
-    <Card title={project.title} style={{ height: '100%', marginTop: '20px' }}>
-      <img alt={project.title} src={project.cover} style={{ width: '100%' }} />
-      <p>{project.description}</p>
+    <Card
+      title={project.title_eng}
+      style={{ height: '100%', marginTop: '20px' }}
+    >
+      <img
+        alt={project.title_eng}
+        src={'project.cover'}
+        style={{ width: '100%' }}
+      />
+      <p>{project.description_eng}</p>
     </Card>
   );
 }
