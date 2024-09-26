@@ -10,21 +10,28 @@ exports.getAllProjects = async (req, res) => {
 };
 
 exports.createProject = async (req, res) => {
-  console.log(req);
   try {
-    const projectData = {
+    // Проверяем, есть ли cover
+    const cover = req.body.cover ? req.body.cover.buffer : null;
+
+    // Проверяем, есть ли screens
+    const screens = req.body.screens
+      ? req.body.screens.map((screen) => screen.buffer)
+      : [];
+
+    // Создаем проект
+    const project = await Project.create({
       title_eng: req.body.title_eng,
       description_eng: req.body.description_eng,
       title_ua: req.body.title_ua,
       description_ua: req.body.description_ua,
-      cover: req.body.cover,
-      screens: req.body.screens,
-      social_urls: req.body.social_urls,
-      isShowedOnSite: req.body.isShowedOnSite,
-      isOnHeroSlider: req.body.isOnHeroSlider,
-    };
+      cover, // сохраняем как BLOB
+      screens, // сохраняем массив BLOB
+      isShowedOnSite: req.body.isShowedOnSite === 'true',
+      isOnHeroSlider: req.body.isOnHeroSlider === 'true',
+      social_urls: req.body.social_urls || {},
+    });
 
-    const project = await Project.create(projectData);
     res.status(201).json(project);
   } catch (error) {
     res.status(500).json({ error: error.message });

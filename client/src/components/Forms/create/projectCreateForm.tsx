@@ -1,9 +1,8 @@
-import type { FormProps } from 'antd';
+import type { FormProps, UploadFile } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { Button, Switch, Form, Input, Flex } from 'antd';
 import { CoverUpload } from '../../Inputs/CoverUpload';
 import { ScreensUpload } from '../../Inputs/ScreensUpload';
-import { getFileFromEvent } from '../../../helpers/files/getFileFromEvent';
 import { useAddProjectMutation } from '../../../redux/services/projectApi';
 
 type FieldType = {
@@ -69,15 +68,14 @@ export const ProjectCreateForm: React.FC = () => {
         formDataToSend.append('cover', formData.cover);
       }
 
-      // Ensure screens are appended correctly
-      const screensArray = Array.isArray(formData.screens)
-        ? formData.screens
-        : [];
-      screensArray.forEach((file) => {
-        if (file instanceof File) {
-          formDataToSend.append(`screens[]`, file);
-        }
-      });
+      if (formData.screens.length > 0) {
+        formData.screens.forEach((screen: File, index: number) => {
+          formDataToSend.append(`screens[${index}]`, screen);
+        });
+      }
+
+      console.log('Formdata Before append:');
+      console.log(formData);
 
       console.log('FormData To Send:');
       for (const [key, value] of formDataToSend.entries()) {
@@ -119,7 +117,7 @@ export const ProjectCreateForm: React.FC = () => {
         <Form.Item
           label='Project Cover'
           name={'cover'}
-          getValueFromEvent={getFileFromEvent}
+          getValueFromEvent={(e) => e?.originFileObj}
         >
           <CoverUpload />
         </Form.Item>
@@ -180,7 +178,9 @@ export const ProjectCreateForm: React.FC = () => {
         <Form.Item
           label='Project Screens'
           name='screens'
-          getValueFromEvent={getFileFromEvent}
+          getValueFromEvent={(e) =>
+            e?.map((file: UploadFile) => file.originFileObj)
+          }
         >
           <ScreensUpload />
         </Form.Item>

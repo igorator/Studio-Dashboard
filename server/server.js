@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const { connectDB } = require('./config/database');
 const projectRoutes = require('./routes/projectRoutes');
-const formDataToJson = require('./middlewares/formDataToJson');
+const { formDataHandler } = require('./middlewares/formDataHandler');
 
 const app = express();
 
@@ -14,9 +14,6 @@ app.use(
 
 app.use(express.json({ limit: '20mb' }));
 app.use(express.urlencoded({ limit: '20mb', extended: true }));
-
-// Подключаем middleware для обработки FormData
-app.use(formDataToJson);
 
 connectDB();
 
@@ -34,7 +31,7 @@ const syncModels = async () => {
 
 syncModels();
 
-app.use('/projects', projectRoutes);
+app.use('/projects', formDataHandler(), projectRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

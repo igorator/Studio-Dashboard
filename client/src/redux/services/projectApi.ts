@@ -15,7 +15,7 @@ export const projectApi = createApi({
       query: () => 'projects',
       providesTags: ['ProjectList'],
     }),
-    addProject: builder.mutation<Project, Partial<Project>>({
+    addProject: builder.mutation<Project, FormData>({
       query: (newProject) => ({
         url: 'projects',
         method: 'POST',

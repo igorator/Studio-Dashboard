@@ -14,9 +14,9 @@ const beforeUpload = (file: FileType) => {
   return validFormat && validSize;
 };
 
-export const CoverUpload: React.FC<{ onChange?: (file: FileType) => void }> = ({
-  onChange,
-}) => {
+export const CoverUpload: React.FC<{
+  onChange?: (filelist: FileType) => void;
+}> = ({ onChange }) => {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
 
@@ -24,7 +24,7 @@ export const CoverUpload: React.FC<{ onChange?: (file: FileType) => void }> = ({
     if (info.file.status === 'uploading') {
       setLoading(true);
     } else if (info.file.status === 'done') {
-      onChange?.(info.file as FileType);
+      onChange?.(info.fileList[0] as FileType);
 
       getBase64(info.file.originFileObj as FileType)
         .then((url) => {
@@ -56,7 +56,7 @@ export const CoverUpload: React.FC<{ onChange?: (file: FileType) => void }> = ({
     <Upload
       maxCount={1}
       name='avatar'
-      accept='.jpg, .png, .webp, .jpeg'
+      accept='image/png, image/jpeg, image/webp, image/gif'
       listType='picture-card'
       showUploadList={false}
       beforeUpload={beforeUpload}

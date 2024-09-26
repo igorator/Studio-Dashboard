@@ -34,7 +34,7 @@ const Project = sequelize.define('Project', {
   },
   isShowedOnSite: {
     type: DataTypes.BOOLEAN,
-    defaultValue: true,
+    defaultValue: false,
   },
   isOnHeroSlider: {
     type: DataTypes.BOOLEAN,

@@ -12,7 +12,7 @@ export function useImageFromBuffer(data: number[] | null) {
       reader.onload = () => resolve(reader.result as string);
       reader.readAsDataURL(new Blob([buffer]));
     });
-    return base64url.slice(base64url.indexOf(',') + 1); // Убираем префикс
+    return base64url.slice(base64url.indexOf(',') + 1);
   };
 
   useEffect(() => {

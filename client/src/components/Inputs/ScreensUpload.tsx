@@ -109,7 +109,7 @@ export const ScreensUpload: React.FC<{
 
       const updatedFileList = [...fileList, info.file as UploadFile];
       setFileList(updatedFileList);
-      onChange?.(updatedFileList);
+      onChange?.(info.fileList);
     } else if (info.file.status === 'error') {
       setLoading(false);
       message.error('Upload failed');
@@ -141,7 +141,7 @@ export const ScreensUpload: React.FC<{
       >
         <Upload
           multiple
-          accept='.jpg, .png, .webp, .jpeg'
+          accept='image/png, image/jpeg, image/webp, image/gif'
           listType='picture'
           maxCount={4}
           beforeUpload={beforeUpload}
