@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import { message, Upload, UploadProps, Button, UploadFile } from 'antd';
-import { isValidImageFormat } from '../../helpers/files/isValidImageFormat';
-import { isValidImageSize } from '../../helpers/files/isValidImageSize';
+import { App, Upload, UploadProps, Button, UploadFile } from 'antd';
+import { isValidImageFormat } from '../../utils/files/isValidImageFormat';
+import { isValidImageSize } from '../../utils/files/isValidImageSize';
 import {
   DndContext,
   DragEndEvent,
@@ -16,23 +16,6 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-
-const beforeUpload = (file: UploadFile) => {
-  const validFormat = isValidImageFormat(file);
-  const validSize = isValidImageSize(file, 4);
-
-  if (!validFormat) {
-    message.error(
-      'Invalid image format. Allowed formats: .jpg, .png, .webp, .jpeg.',
-    );
-  }
-
-  if (!validSize) {
-    message.error('Image size exceeds the 4MB limit.');
-  }
-
-  return validFormat && validSize;
-};
 
 const DraggableUploadListItem = ({
   originNode,
@@ -74,13 +57,47 @@ const DraggableUploadListItem = ({
 
 export const ScreensUpload: React.FC<{
   onChange?: (fileList: UploadFile[]) => void;
-}> = ({ onChange }) => {
+  initialScreensIds?: number[];
+}> = ({ onChange, initialScreensIds }) => {
   const [loading, setLoading] = useState(false);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const { message } = App.useApp();
+
+  useEffect(() => {
+    if (initialScreensIds) {
+      const initialFiles = initialScreensIds.map(
+        (screen_id: number, index) => ({
+          uid: `screen-${screen_id} №${index + 1}`,
+          name: `Screen ${screen_id} №${index + 1}`,
+          status: 'done' as UploadFile['status'],
+          url: `${import.meta.env.VITE_API_URL}/media/${screen_id}`,
+          thumbUrl: `${import.meta.env.VITE_API_URL}/media/${screen_id}`,
+        }),
+      );
+      setFileList(initialFiles);
+    }
+  }, [initialScreensIds]);
 
   const sensor = useSensor(PointerSensor, {
     activationConstraint: { distance: 10 },
   });
+
+  const beforeUpload = (file: UploadFile) => {
+    const validFormat = isValidImageFormat(file);
+    const validSize = isValidImageSize(file, 4);
+
+    if (!validFormat) {
+      message.error(
+        'Invalid image format. Allowed formats: .jpg, .png, .webp, .jpeg.',
+      );
+    }
+
+    if (!validSize) {
+      message.error('Image size exceeds the 4MB limit.');
+    }
+
+    return validFormat && validSize;
+  };
 
   const onDragEnd = ({ active, over }: DragEndEvent) => {
     if (over && active.id !== over.id) {
@@ -90,9 +107,7 @@ export const ScreensUpload: React.FC<{
 
         if (activeIndex !== -1 && overIndex !== -1) {
           const updatedFileList = arrayMove(prev, activeIndex, overIndex);
-
-          console.log('Updated FileList:', updatedFileList);
-
+          onChange?.(updatedFileList);
           return updatedFileList;
         }
 
@@ -106,10 +121,9 @@ export const ScreensUpload: React.FC<{
       setLoading(true);
     } else if (info.file.status === 'done') {
       setLoading(false);
-
-      const updatedFileList = [...fileList, info.file as UploadFile];
+      const updatedFileList = [...info.fileList];
       setFileList(updatedFileList);
-      onChange?.(info.fileList);
+      onChange?.(updatedFileList);
     } else if (info.file.status === 'error') {
       setLoading(false);
       message.error('Upload failed');
@@ -119,7 +133,24 @@ export const ScreensUpload: React.FC<{
   const handleRemove = (file: UploadFile) => {
     const newFileList = fileList.filter((f) => f.uid !== file.uid);
     setFileList(newFileList);
-    onChange?.(newFileList);
+    onChange?.(newFileList); // Call onChange after updating the state
+  };
+
+  const handleCustomRequest = (info) => {
+    const { file, onSuccess, onError } = info;
+
+    setLoading(true);
+    const isSuccess = true;
+    if (isSuccess) {
+      const updatedFileList = [file, ...fileList];
+      console.log(updatedFileList);
+      setFileList(updatedFileList);
+      onChange?.(updatedFileList);
+      onSuccess(file);
+    } else {
+      onError(new Error('Upload error'));
+    }
+    setLoading(false);
   };
 
   const uploadButton = (
@@ -141,17 +172,15 @@ export const ScreensUpload: React.FC<{
       >
         <Upload
           multiple
-          accept='image/png, image/jpeg, image/webp, image/gif'
+          name='screens'
+          accept='image/*'
           listType='picture'
           maxCount={4}
           beforeUpload={beforeUpload}
-          customRequest={({ onSuccess }) =>
-            setTimeout(() => {
-              onSuccess?.('ok');
-            }, 1000)
-          }
           onChange={handleChange}
+          fileList={fileList}
           onRemove={handleRemove}
+          customRequest={handleCustomRequest}
           itemRender={(originNode, file) => (
             <DraggableUploadListItem originNode={originNode} file={file} />
           )}

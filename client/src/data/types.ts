@@ -1,30 +1,20 @@
-export type EntityType =
-  | 'general'
-  | 'dashboard'
-  | 'projects'
-  | 'team'
-  | 'offers'
-  | 'leads';
+export type Entity = Project | TeamMember | Offer | Lead | User;
 
 export type WrapperCardProps = {
   title: string;
-  entityType: EntityType;
   children: React.ReactNode;
-};
-
-export type WrapperCardControlsProps = {
-  entityType: EntityType;
+  controls?: React.ReactNode;
 };
 
 export type Project = {
-  id: string;
+  id: number;
   title_eng: string;
   description_eng: string;
   title_ua: string;
   description_ua: string;
   social_urls: { [key: string]: string | null };
-  cover: File;
-  screens: File[];
+  cover_id: number;
+  screens: number[];
   isShowOnSite: boolean;
   isOnHeroSlider: boolean;
   createdDate: Date;
@@ -32,29 +22,35 @@ export type Project = {
 };
 
 export type TeamMember = {
-  id: string;
-  name: string;
-  jobTitle: string;
-  photo: string;
+  id: number;
+  name_eng: string;
+  name_ua: string;
+  jobTitle_eng: string;
+  jobTitle_ua: string;
+  photo_id: number;
 };
 
 export type Offer = {
-  id: string;
-  title: string;
-  description: string;
-  animation: string;
+  id: number;
+  title_eng: string;
+  description_eng: string;
+  description_ua: string;
+  title_ua: string;
+  cover_id: number;
   createdDate: Date;
   expiredDate: Date;
 };
 
 export type Lead = {
-  id: string;
-  title: string;
+  id: number;
+  full_name: string;
   email: string;
-  phone: number;
-  company: string;
-  message: string;
+  phone_number: number;
+  company_name: string;
+  project_info: string;
   agreement: boolean;
+  is_checked: boolean;
+  createdAt: Date;
 };
 
 export type User = {

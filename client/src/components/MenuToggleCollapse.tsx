@@ -15,9 +15,8 @@ export function MenuToggleCollapse() {
     <Button
       type='primary'
       onClick={handleToggle}
-      style={{ padding: '16px 14px', marginLeft: 12, marginBottom: 16 }}
-    >
-      {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-    </Button>
+      style={{ padding: '18px 20px', marginLeft: 14, marginBottom: 16 }}
+      icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+    />
   );
 }

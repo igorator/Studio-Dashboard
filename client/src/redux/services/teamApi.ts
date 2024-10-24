@@ -1,5 +1,4 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { TeamMember } from '../../data/types';
 
 export const teamMemberApi = createApi({
   reducerPath: 'teamMemberApi',
@@ -7,33 +6,37 @@ export const teamMemberApi = createApi({
     baseUrl: import.meta.env.VITE_API_URL,
   }),
   endpoints: (builder) => ({
-    getTeamMemberById: builder.query<TeamMember, string>({
+    getTeamMemberById: builder.query({
       query: (id) => `team/${id}`,
     }),
-    getTeamMembers: builder.query<TeamMember[], void>({
+    getTeamMembers: builder.query({
       query: () => 'team',
     }),
-    addTeamMember: builder.mutation<TeamMember, Partial<TeamMember>>({
+    addTeamMember: builder.mutation({
       query: (newMember) => ({
         url: 'team',
         method: 'POST',
         body: newMember,
       }),
     }),
-    editTeamMember: builder.mutation<
-      TeamMember,
-      { id: string; updates: Partial<TeamMember> }
-    >({
+    editTeamMember: builder.mutation({
       query: ({ id, updates }) => ({
         url: `team/${id}`,
         method: 'PUT',
         body: updates,
       }),
     }),
-    deleteTeamMember: builder.mutation<void, string>({
+    deleteTeamMember: builder.mutation({
       query: (id) => ({
         url: `team/${id}`,
         method: 'DELETE',
+      }),
+    }),
+    reorderTeamMembers: builder.mutation({
+      query: (order) => ({
+        url: 'team/reorder',
+        method: 'POST',
+        body: order,
       }),
     }),
   }),
@@ -45,4 +48,5 @@ export const {
   useAddTeamMemberMutation,
   useEditTeamMemberMutation,
   useDeleteTeamMemberMutation,
+  useReorderTeamMembersMutation,
 } = teamMemberApi;

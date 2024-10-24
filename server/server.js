@@ -2,6 +2,10 @@ const express = require('express');
 const cors = require('cors');
 const { connectDB } = require('./config/database');
 const projectRoutes = require('./routes/projectRoutes');
+const mediaRoutes = require('./routes/mediaRoutes');
+const offerRoutes = require('./routes/offerRoutes');
+const teamRoutes = require('./routes/teamRoutes');
+const leadRoutes = require('./routes/leadRoutes');
 const { formDataHandler } = require('./middlewares/formDataHandler');
 
 const app = express();
@@ -23,6 +27,7 @@ const syncModels = async () => {
     await require('./models/Offer').sequelize.sync({ alter: true });
     await require('./models/TeamMember').sequelize.sync({ alter: true });
     await require('./models/User').sequelize.sync({ alter: true });
+    await require('./models/Media').sequelize.sync({ alter: true });
     console.log('Models synchronized');
   } catch (err) {
     console.error('Failed to synchronize models:', err.message);
@@ -32,6 +37,10 @@ const syncModels = async () => {
 syncModels();
 
 app.use('/projects', formDataHandler(), projectRoutes);
+app.use('/team', formDataHandler(), teamRoutes);
+app.use('/offers', formDataHandler(), offerRoutes);
+app.use('/leads', formDataHandler(), leadRoutes);
+app.use('/media', mediaRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

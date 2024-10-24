@@ -1,3 +1,10 @@
+import { WrapperCard } from '../../components/Cards/WrapperCard';
+import { OfferForm } from '../../components/Forms/OfferForm';
+
 export function OfferCreate() {
-  return <span>Create</span>;
+  return (
+    <WrapperCard title={'Create Offer'}>
+      <OfferForm />
+    </WrapperCard>
+  );
 }

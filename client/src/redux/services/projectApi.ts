@@ -1,5 +1,4 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { Project } from '../../data/types';
 
 export const projectApi = createApi({
   reducerPath: 'projectApi',
@@ -8,14 +7,14 @@ export const projectApi = createApi({
   }),
   tagTypes: ['ProjectList'],
   endpoints: (builder) => ({
-    getProjectById: builder.query<Project, string>({
+    getProjectById: builder.query({
       query: (id) => `projects/${id}`,
     }),
-    getProjects: builder.query<Project[], void>({
+    getProjects: builder.query({
       query: () => 'projects',
       providesTags: ['ProjectList'],
     }),
-    addProject: builder.mutation<Project, FormData>({
+    addProject: builder.mutation({
       query: (newProject) => ({
         url: 'projects',
         method: 'POST',
@@ -23,10 +22,7 @@ export const projectApi = createApi({
       }),
       invalidatesTags: ['ProjectList'],
     }),
-    editProject: builder.mutation<
-      Project,
-      { id: string; updates: Partial<Project> }
-    >({
+    editProject: builder.mutation({
       query: ({ id, updates }) => ({
         url: `projects/${id}`,
         method: 'PUT',
@@ -34,10 +30,18 @@ export const projectApi = createApi({
       }),
       invalidatesTags: ['ProjectList'],
     }),
-    deleteProject: builder.mutation<void, string>({
+    deleteProject: builder.mutation({
       query: (id) => ({
         url: `projects/${id}`,
         method: 'DELETE',
+      }),
+      invalidatesTags: ['ProjectList'],
+    }),
+    updateProjectOrder: builder.mutation({
+      query: (projects) => ({
+        url: 'projects/reorder',
+        method: 'POST',
+        body: projects,
       }),
       invalidatesTags: ['ProjectList'],
     }),
@@ -45,9 +49,10 @@ export const projectApi = createApi({
 });
 
 export const {
-  useGetProjectByIdQuery,
   useGetProjectsQuery,
+  useGetProjectByIdQuery,
   useAddProjectMutation,
   useEditProjectMutation,
   useDeleteProjectMutation,
+  useUpdateProjectOrderMutation, // Добавляем хук для обновления порядка
 } = projectApi;

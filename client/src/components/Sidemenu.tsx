@@ -6,10 +6,16 @@ import { useNavigate, useLocation } from 'react-router-dom';
 export function Sidemenu() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [selectedKey, setSelectedKey] = useState(location.pathname);
+  const [selectedKey, setSelectedKey] = useState<string>('');
 
   useEffect(() => {
-    setSelectedKey(location.pathname);
+    const activeKey = navigation.find((item) => {
+      return item && location.pathname.startsWith(item.key as string);
+    })?.key;
+
+    if (typeof activeKey === 'string') {
+      setSelectedKey(activeKey);
+    }
   }, [location.pathname]);
 
   const handleMenuClick = ({ key }: { key: string }) => {

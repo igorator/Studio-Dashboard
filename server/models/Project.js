@@ -1,53 +1,91 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
+const ProjectCover = require('./ProjectCover');
+const ProjectScreen = require('./ProjectScreen');
 
-const Project = sequelize.define('Project', {
-  title_eng: {
-    type: DataTypes.STRING,
-    allowNull: false,
+const Project = sequelize.define(
+  'Project',
+  {
+    title_eng: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    description_eng: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    title_ua: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    description_ua: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    isOnSite: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    isOnHeroSlider: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    social_urls: {
+      type: DataTypes.JSONB,
+      allowNull: true,
+      defaultValue: {},
+    },
+    cover_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      defaultValue: null,
+    },
+    screens_ids: {
+      type: DataTypes.ARRAY(DataTypes.INTEGER),
+      allowNull: true,
+      defaultValue: [],
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
+    order_number: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
   },
-  description_eng: {
-    type: DataTypes.TEXT,
-    allowNull: false,
+  {
+    hooks: {
+      beforeCreate: (project) => {
+        // Устанавливаем order_number равным id, когда проект создается
+        project.order_number = project.id; // id будет доступен после сохранения
+      },
+      beforeSave: (project) => {
+        // Устанавливаем order_number равным id, если он не был установлен
+        if (project.order_number === null) {
+          project.order_number = project.id; // id будет доступен после сохранения
+        }
+      },
+    },
   },
-  title_ua: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  description_ua: {
-    type: DataTypes.TEXT,
-    allowNull: false,
-  },
-  cover: {
-    type: DataTypes.BLOB,
-    allowNull: true,
-  },
-  screens: {
-    type: DataTypes.ARRAY(DataTypes.BLOB),
-    allowNull: true,
-    defaultValue: [],
-  },
-  social_urls: {
-    type: DataTypes.JSONB,
-    allowNull: true,
-    defaultValue: {},
-  },
-  isShowedOnSite: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false,
-  },
-  isOnHeroSlider: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false,
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-  },
+);
+
+// Связь "Один проект - один cover"
+Project.hasOne(ProjectCover, {
+  foreignKey: 'cover_id',
+  as: 'cover',
+  onDelete: 'CASCADE',
+});
+
+// Связь "Один проект - несколько скриншотов"
+Project.hasMany(ProjectScreen, {
+  foreignKey: 'project_id',
+  as: 'screens',
+  onDelete: 'CASCADE', // Каскадное удаление скриншотов при удалении проекта
 });
 
 module.exports = Project;

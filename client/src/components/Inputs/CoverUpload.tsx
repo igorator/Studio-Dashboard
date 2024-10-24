@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import { message, Upload, GetProp, UploadProps } from 'antd';
-import { getBase64 } from '../../helpers/files/getBase64';
-import { isValidImageFormat } from '../../helpers/files/isValidImageFormat';
-import { isValidImageSize } from '../../helpers/files/isValidImageSize';
+import { App, Upload, GetProp, UploadProps } from 'antd';
+import { getBase64 } from '../../utils/files/getBase64';
+import { isValidImageFormat } from '../../utils/files/isValidImageFormat';
+import { isValidImageSize } from '../../utils/files/isValidImageSize';
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
@@ -19,6 +19,7 @@ export const CoverUpload: React.FC<{
 }> = ({ onChange }) => {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
+  const { message } = App.useApp();
 
   const handleChange: UploadProps['onChange'] = (info) => {
     if (info.file.status === 'uploading') {

@@ -1,10 +1,10 @@
-import { WrapperCard } from '../../components/Cards/WrapperCard/WrapperCard';
-import { ProjectCreateForm } from '../../components/Forms/create/projectCreateForm';
+import { WrapperCard } from '../../components/Cards/WrapperCard';
+import { ProjectForm } from '../../components/Forms/ProjectForm';
 
 export function ProjectCreate() {
   return (
-    <WrapperCard entityType='general' title={'Create Project'}>
-      <ProjectCreateForm />
+    <WrapperCard title={'Create Project'}>
+      <ProjectForm />
     </WrapperCard>
   );
 }

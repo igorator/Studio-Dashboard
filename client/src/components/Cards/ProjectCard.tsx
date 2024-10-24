@@ -1,78 +1,73 @@
-import { Card, Button, Flex } from 'antd';
-import { Link } from 'react-router-dom';
+import { App, Button, Card, Flex } from 'antd';
+import { useNavigate } from 'react-router-dom';
 import { Project } from '../../data/types';
 import { routes } from '../../data/routes-config';
 import { useDeleteProjectMutation } from '../../redux/services/projectApi';
-import { DeleteOutlined } from '@ant-design/icons';
-import { useImageFromBuffer } from '../../hooks/useImageFromBuffer';
-import { useState } from 'react';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import imagePlaceholder from '../../assets/image-placeholder.webp';
+import { CustomModal } from '../CustomModal';
 
-interface ProjectCardProps {
+type ProjectCardProps = {
   project: Project;
-  onDelete: () => void; // Callback for deletion
-}
+  onDelete: () => void;
+};
 
 export const ProjectCard = ({ project, onDelete }: ProjectCardProps) => {
+  const { message } = App.useApp();
   const [deleteProject] = useDeleteProjectMutation();
-  const [isDeleting, setIsDeleting] = useState(false); // Состояние для отслеживания удаления
+  const navigate = useNavigate();
 
-  const coverData = project.cover?.data || null;
-  const { image: projectCover, loading, error } = useImageFromBuffer(coverData);
-
-  const handleDelete = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    setIsDeleting(true); // Устанавливаем флаг удаления
+  const handleDelete = async () => {
     try {
       await deleteProject(project.id).unwrap();
-      console.log('Project deleted');
+      message.success('Project deleted');
       onDelete();
     } catch (err) {
       console.error('Failed to delete the project:', err);
-    } finally {
-      setIsDeleting(false); // Сбрасываем флаг удаления
-    }
-  };
-
-  const handleCardClick = (e: React.MouseEvent) => {
-    if (isDeleting) {
-      e.preventDefault();
-      e.stopPropagation();
+      ('Unable to delete project');
     }
   };
 
   return (
-    <Link
-      to={`${routes.projects.path}/${project.id}`}
-      onClick={handleCardClick}
+    <Card
+      hoverable
+      style={{
+        cursor: 'default',
+        width: 300,
+      }}
+      cover={
+        <img
+          style={{
+            maxHeight: 300,
+            objectFit: 'cover',
+            aspectRatio: '16 / 9',
+          }}
+          src={
+            project.cover_id === null
+              ? imagePlaceholder
+              : `${import.meta.env.VITE_API_URL}/media/${project.cover_id}`
+          }
+        />
+      }
     >
-      <Card
-        hoverable
-        style={{
-          width: 300,
-          cursor: 'pointer',
-          opacity: isDeleting ? 0.6 : 1, // Устанавливаем прозрачность
-          pointerEvents: isDeleting ? 'none' : 'auto', // Блокируем события, если удаляется
-        }}
-        cover={
-          loading ? (
-            <div>Loading...</div>
-          ) : error ? (
-            <div>Error loading image: {error}</div>
-          ) : (
-            projectCover && <img alt={project.title_eng} src={projectCover} />
-          )
-        }
-      >
-        <Flex vertical>
-          <h3>{project.title_eng}</h3>
-          <p>{project.description_eng}</p>
-        </Flex>
-        <Button onClick={handleDelete} disabled={isDeleting}>
-          <DeleteOutlined />
-        </Button>
-      </Card>
-    </Link>
+      <Flex vertical>
+        <h3>{project.title_eng}</h3>
+        <p>{project.description_eng}</p>
+      </Flex>
+
+      <Flex justify='between' gap={16} align='center'>
+        <Button
+          type='primary'
+          onClick={() => navigate(`${routes.projects.path}/${project.id}`)}
+          icon={<EditOutlined />}
+        />
+        <CustomModal
+          title='Project Deleting'
+          message='Are you sure you want to delete project?'
+          onOkAction={handleDelete}
+          trigger={<DeleteOutlined />}
+        />
+      </Flex>
+    </Card>
   );
 };

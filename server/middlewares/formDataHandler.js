@@ -8,7 +8,6 @@ const upload = multer({ storage });
 const formDataHandler = () => {
   return (req, res, next) => {
     if (req.body && req.body.processed) {
-      // Если данные уже были обработаны, пропускаем этот шаг
       return next();
     }
 
@@ -20,37 +19,50 @@ const formDataHandler = () => {
       }
 
       const data = { ...req.body };
+      console.log(data);
+
+      //console.log('DATA-MIDLEWARE:', data);
 
       // Обработка загруженных файлов
       if (req.files) {
         req.files.forEach((file) => {
-          // Проверяем имя поля
-          if (file.fieldname === 'cover') {
-            // Если это поле cover
-            data.cover = {
+          // Проверка поля photo (если это поле фото)
+          if (file.fieldname === 'photo') {
+            data.photo = {
               originalname: file.originalname,
-              buffer: file.buffer, // Преобразуем в base64
+              buffer: file.buffer,
               mimetype: file.mimetype,
             };
-          } else if (file.fieldname.startsWith('screens')) {
-            // Если это screens (добавляем в массив screens)
+          }
+
+          // Проверяем имя поля cover
+          else if (file.fieldname === 'cover') {
+            data.cover = {
+              originalname: file.originalname,
+              buffer: file.buffer,
+              mimetype: file.mimetype,
+            };
+          }
+
+          // Проверка на screens (массив скриншотов)
+          else if (file.fieldname.startsWith('screens')) {
             if (!data.screens) {
               data.screens = [];
             }
             data.screens.push({
               originalname: file.originalname,
-              buffer: file.buffer, // Преобразуем в base64
+              buffer: file.buffer,
               mimetype: file.mimetype,
             });
           }
         });
       }
 
-      // Убедимся, что поля cover и screens присутствуют
+      // Убедимся, что все данные обработаны корректно
       data.cover = data.cover || null;
       data.screens = data.screens || [];
+      data.photo = data.photo || null;
 
-      // Флаг, чтобы указать, что данные уже обработаны
       data.processed = true;
 
       // Обновляем req.body

@@ -2,7 +2,7 @@ import { Breadcrumb } from 'antd';
 import { Link, useLocation } from 'react-router-dom';
 import { routes } from '../data/routes-config';
 import { HomeOutlined } from '@ant-design/icons';
-import { capitalize } from '../helpers/text/capitalize';
+import { capitalize } from '../utils/text/capitalize';
 
 export const Breadcrumbs = () => {
   const location = useLocation();

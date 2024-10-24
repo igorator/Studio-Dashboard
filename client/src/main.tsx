@@ -20,9 +20,11 @@ import {
   ProjectsReorder,
   OfferCreate,
   OffersReorder,
+  OfferDetails,
   TeamMemberCreate,
   TeamMembersReorder,
   LeadDetails,
+  TeamMemberDetails,
 } from './routes/routes';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { routes } from './data/routes-config';
@@ -71,6 +73,10 @@ export const router = createBrowserRouter([
             path: 'reorder',
             element: <OffersReorder />,
           },
+          {
+            path: ':id',
+            element: <OfferDetails />,
+          },
         ],
       },
       {
@@ -84,6 +90,10 @@ export const router = createBrowserRouter([
           {
             path: 'reorder',
             element: <TeamMembersReorder />,
+          },
+          {
+            path: ':id',
+            element: <TeamMemberDetails />,
           },
         ],
       },
