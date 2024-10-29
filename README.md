@@ -1,3 +1,5 @@
+![Cover](https://github.com/user-attachments/assets/ea2c8367-bd6b-48a3-80c9-53bdce050f5c)
+
 # Studio Dashboard
 
 💻 **Tech Stack**  
