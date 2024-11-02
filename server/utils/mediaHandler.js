@@ -1,19 +1,12 @@
-const Media = require('../models/Media'); // Убедитесь, что путь к модели Media правильный
+const Media = require('../models/Media');
 
-const handleMedia = async (
-  entity, // объект сущности, например Project, TeamMember и т.д.
-  mediaFields, // объект, содержащий поля для медиа, например { singleField: 'cover', multiField: 'screens' }
-  mediaData, // объект, содержащий данные медиа (например, файлы)
-  transaction, // транзакция для сохранения данных в базе
-) => {
+const handleMedia = async (entity, mediaFields, mediaData, transaction) => {
   const { singleField, multiField } = mediaFields;
 
-  // 1. Обработка одиночного медиа-поля (например, cover или photo)
   if (singleField) {
     const mediaFile = mediaData[singleField];
 
     if (mediaFile === null) {
-      // Если медиа равно null, удаляем существующее медиа, если оно есть
       if (entity[`${singleField}_id`]) {
         await Media.destroy({
           where: { id: entity[`${singleField}_id`] },
@@ -22,7 +15,6 @@ const handleMedia = async (
         await entity.update({ [`${singleField}_id`]: null }, { transaction });
       }
     } else if (mediaFile?.buffer) {
-      // Если есть новый файл, заменяем существующий
       if (entity[`${singleField}_id`]) {
         await Media.destroy({
           where: { id: entity[`${singleField}_id`] },
@@ -46,33 +38,39 @@ const handleMedia = async (
     }
   }
 
-  // 2. Обработка мульти-поля медиа (например, screens)
   if (multiField) {
-    const newMediaArray = mediaData[multiField]; // Новые медиа-файлы (если есть)
-    let existingMediaIds = entity[`${multiField}_ids`] || []; // Существующие ID медиа
+    const newMediaArray = mediaData[multiField] || [];
+    let existingMediaIds = entity[`${multiField}_ids`] || [];
 
-    console.log('MEDIADATA:', mediaData);
+    const newMediaIds = newMediaArray.map((media) => media.id).filter(Boolean);
+    const mediaToAdd = newMediaArray.filter((media) => !media.id);
 
-    // Если есть новые медиа
-    if (Array.isArray(newMediaArray) && newMediaArray.length > 0) {
-      // Сохраняем новые медиа
-      const mediaToSave = newMediaArray.map((media) => ({
+    const mediaToRemove = existingMediaIds.filter(
+      (id) => !newMediaIds.includes(id),
+    );
+    if (mediaToRemove.length > 0) {
+      await Media.destroy({ where: { id: mediaToRemove }, transaction });
+      existingMediaIds = existingMediaIds.filter(
+        (id) => !mediaToRemove.includes(id),
+      );
+    }
+
+    if (mediaToAdd.length > 0) {
+      const mediaToSave = mediaToAdd.map((media) => ({
         content: media.buffer,
-        originalname: media.originalname, // Предполагается, что у каждого медиа есть originalname
-        mimetype: media.mimetype, // Предполагается, что у каждого медиа есть mimetype
-        size: media.size, // Предполагается, что у каждого медиа есть size
+        originalname: media.originalname,
+        mimetype: media.mimetype,
+        size: media.size,
         entityId: entity.id,
       }));
       const createdMedia = await Media.bulkCreate(mediaToSave, { transaction });
-
-      // Добавляем новые ID к существующим ID медиа
       existingMediaIds = [
         ...existingMediaIds,
         ...createdMedia.map((media) => media.id),
       ];
     }
 
-    // Обновляем поле с массивом ID медиа (если оно изменилось)
+    // 2.5 Обновляем поле с массивом ID медиа (если оно изменилось)
     await entity.update(
       { [`${multiField}_ids`]: existingMediaIds },
       { transaction },

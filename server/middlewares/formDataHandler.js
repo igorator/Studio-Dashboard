@@ -19,9 +19,6 @@ const formDataHandler = () => {
       }
 
       const data = { ...req.body };
-      console.log(data);
-
-      //console.log('DATA-MIDLEWARE:', data);
 
       // Обработка загруженных файлов
       if (req.files) {

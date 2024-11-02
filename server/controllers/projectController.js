@@ -38,17 +38,7 @@ exports.createProject = async (req, res) => {
         .map((file) => file),
     };
 
-    const newProject = await Project.create(
-      {
-        title_eng: req.body.title_eng,
-        description_eng: req.body.description_eng,
-        title_ua: req.body.title_ua,
-        description_ua: req.body.description_ua,
-        isOnSite: req.body.isOnSite,
-        isOnHeroSlider: req.body.isOnHeroSlider,
-      },
-      { transaction },
-    );
+    const newProject = await Project.create(req.body, { transaction });
 
     // Вызов handleMedia с mediaData
     await handleMedia(
@@ -98,13 +88,12 @@ exports.updateProject = async (req, res) => {
         { cover: coverFile },
         transaction,
       );
-      await project.update({ cover_id: coverFile.id }, { transaction }); // обновляем cover_id
+      await project.update({ cover_id: coverFile.id }, { transaction });
     }
 
     // Обработка поля screens
     if (req.body.screens === '[]') {
       if (project.screens) {
-        console.log(project.screens);
         console.log(`Deleting screens media: ${project.screens}`);
         await Media.destroy({
           where: { id: project.screens.map((screen) => screen.id) },
@@ -112,7 +101,6 @@ exports.updateProject = async (req, res) => {
       }
       await project.update({ screens_ids: [] }, { transaction });
     } else if (screenFiles.length > 0) {
-      console.log(screenFiles);
       await handleMedia(
         project,
         { multiField: 'screens' },

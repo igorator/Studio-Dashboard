@@ -21,16 +21,9 @@ type TeamMemberFieldType = TeamMemberBaseType & {
   photo: File | null;
 };
 
-// Тип для записи команды
 type TeamMemberEntryDataType = TeamMemberBaseType & {
   id: number;
   photo_id: number | null;
-};
-
-const onFinishFailed: FormProps<TeamMemberFieldType>['onFinishFailed'] = (
-  errorInfo,
-) => {
-  console.log('Failed:', errorInfo);
 };
 
 export const TeamForm = ({
@@ -43,42 +36,41 @@ export const TeamForm = ({
   const [editTeamMember] = useEditTeamMemberMutation();
   const [isDirty, setIsDirty] = useState(false);
 
+  const onFinishFailed: FormProps<TeamMemberFieldType>['onFinishFailed'] =
+    () => {
+      message.error('Please fill in all required fields correctly');
+    };
+
   const onFinish: FormProps<TeamMemberFieldType>['onFinish'] = async (
     formData,
   ) => {
     try {
       const formDataToSend = new FormData();
 
-      // Adding text data
       formDataToSend.append('name_eng', formData.name_eng);
       formDataToSend.append('job_title_eng', formData.job_title_eng);
       formDataToSend.append('name_ua', formData.name_ua);
       formDataToSend.append('job_title_ua', formData.job_title_ua);
 
-      // Adding photo file
       if (formData.photo instanceof File) {
         formDataToSend.append('photo', formData.photo);
       }
 
-      // Adding boolean data
       formDataToSend.append('isOnSite', formData.isOnSite.toString());
 
       if (teamMember) {
-        // Editing an existing team member
-        const response = await editTeamMember({
+        await editTeamMember({
           id: teamMember.id,
           updates: formDataToSend,
         });
-        console.log('Edited team member:', response);
+
         message.success('Team member updated');
       } else {
-        // Adding a new team member
-        const response = await addTeamMember(formDataToSend);
+        await addTeamMember(formDataToSend);
         message.success('Team member created');
-        console.log('New team member created:', response);
       }
 
-      setIsDirty(false); // Reset isDirty after successful submission
+      setIsDirty(false);
     } catch (error) {
       console.error('Error creating or editing team member:', error);
     }
@@ -114,7 +106,7 @@ export const TeamForm = ({
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete='off'
-      onValuesChange={handleChange} // Tracking changes in form
+      onValuesChange={handleChange}
     >
       <Flex vertical gap={16}>
         <Form.Item

@@ -3,7 +3,7 @@ import { useGetLeadsQuery } from '../../redux/services/leadApi';
 import { WrapperCard } from '../../components/Cards/WrapperCard';
 import { Outlet, useLocation } from 'react-router-dom';
 import { routes } from '../../data/routes-config';
-import { LeadsTable } from '../../components/Tables/LeadsTable';
+import { LeadsTable } from '../../components/Tables/LeadsTable/LeadsTable';
 import { ReloadOutlined } from '@ant-design/icons';
 
 export function Leads() {

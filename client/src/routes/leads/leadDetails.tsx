@@ -30,8 +30,6 @@ export function LeadDetails() {
   const [checkLead] = useCheckLeadByIdMutation();
   const [deleteLead] = useDeleteLeadMutation();
 
-  console.log(leads);
-
   const handleCheckChange = async () => {
     if (!lead) return;
     try {

@@ -31,12 +31,6 @@ type OfferEntryDataType = OfferBaseType & {
   cover_id: number | null;
 };
 
-const onFinishFailed: FormProps<OfferFieldType>['onFinishFailed'] = (
-  errorInfo,
-) => {
-  console.log('Failed:', errorInfo);
-};
-
 export const OfferForm = ({
   offer,
   refetchOffer,
@@ -58,6 +52,10 @@ export const OfferForm = ({
 
   // Состояние для отслеживания изменений формы
   const [isDirty, setIsDirty] = useState(false);
+
+  const onFinishFailed: FormProps<OfferFieldType>['onFinishFailed'] = () => {
+    message.error('Please fill in all required fields correctly');
+  };
 
   const onFinish: FormProps<OfferFieldType>['onFinish'] = async (formData) => {
     try {

@@ -28,7 +28,9 @@ import {
 } from './routes/routes';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { routes } from './data/routes-config';
+import { PrivateRoute } from './routes/PrivateRoute'; // Импортируйте ваш компонент PrivateRoute
 
+// Определение маршрутов
 export const router = createBrowserRouter([
   {
     path: routes.root.path,
@@ -41,69 +43,69 @@ export const router = createBrowserRouter([
       },
       {
         path: routes.dashboard.path,
-        element: <Dashboard />,
+        element: <PrivateRoute element={<Dashboard />} />, // Защищенный маршрут
       },
       {
         path: routes.projects.path,
-        element: <Projects />,
+        element: <PrivateRoute element={<Projects />} />, // Защищенный маршрут
         children: [
           {
             path: ':id',
-            element: <ProjectDetails />,
+            element: <PrivateRoute element={<ProjectDetails />} />, // Защищенный маршрут
           },
           {
             path: 'create',
-            element: <ProjectCreate />,
+            element: <PrivateRoute element={<ProjectCreate />} />, // Защищенный маршрут
           },
           {
             path: 'reorder',
-            element: <ProjectsReorder />,
+            element: <PrivateRoute element={<ProjectsReorder />} />, // Защищенный маршрут
           },
         ],
       },
       {
         path: routes.offers.path,
-        element: <Offers />,
+        element: <PrivateRoute element={<Offers />} />, // Защищенный маршрут
         children: [
           {
             path: 'create',
-            element: <OfferCreate />,
+            element: <PrivateRoute element={<OfferCreate />} />, // Защищенный маршрут
           },
           {
             path: 'reorder',
-            element: <OffersReorder />,
+            element: <PrivateRoute element={<OffersReorder />} />, // Защищенный маршрут
           },
           {
             path: ':id',
-            element: <OfferDetails />,
+            element: <PrivateRoute element={<OfferDetails />} />, // Защищенный маршрут
           },
         ],
       },
       {
         path: routes.team.path,
-        element: <Team />,
+        element: <PrivateRoute element={<Team />} />, // Защищенный маршрут
         children: [
           {
             path: 'create',
-            element: <TeamMemberCreate />,
+            element: <PrivateRoute element={<TeamMemberCreate />} />, // Защищенный маршрут
           },
           {
             path: 'reorder',
-            element: <TeamMembersReorder />,
+            element: <PrivateRoute element={<TeamMembersReorder />} />, // Защищенный маршрут
           },
           {
             path: ':id',
-            element: <TeamMemberDetails />,
+            element: <PrivateRoute element={<TeamMemberDetails />} />, // Защищенный маршрут
           },
         ],
       },
       {
         path: routes.leads.path,
-        element: <Leads />,
+        element: <PrivateRoute element={<Leads />} />, // Защищенный маршрут
         children: [
           {
             path: ':id',
-            element: <LeadDetails />,
+            element: <PrivateRoute element={<LeadDetails />} />, // Защищенный маршрут
           },
         ],
       },
@@ -115,6 +117,7 @@ export const router = createBrowserRouter([
   },
 ]);
 
+// Рендеринг приложения
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <Provider store={store}>

@@ -39,15 +39,8 @@ export function TeamMembersReorder() {
         order_number: index + 1, // Присваиваем новый порядок
       }));
 
-      // Логируем данные, которые отправляются
-      console.log('Sending ordered members:', JSON.stringify(orderedMembers));
+      await updateTeamMemberOrder(orderedMembers).unwrap();
 
-      // Отправляем запрос на сервер с обновленным порядком
-      const response = await updateTeamMemberOrder(orderedMembers).unwrap();
-
-      console.log('Confirmed order response:', response); // Логируем успешный ответ
-
-      // Обновляем список членов команды
       refetch();
       setIsDragged(false);
     } catch (error) {

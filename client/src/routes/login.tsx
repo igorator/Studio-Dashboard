@@ -1,9 +1,28 @@
-import { Form, Input, Button, Flex, Card, Typography, Space } from 'antd';
+import { Form, Input, Button, Flex, Card, Typography, Space, App } from 'antd';
+import { useLoginMutation } from '../redux/services/userApi';
+import { useNavigate } from 'react-router-dom';
+import { routes } from '../data/routes-config';
+
+type LoginValues = {
+  email: string;
+  password: string;
+};
 
 export function Login() {
-  const onFinish = (values) => {
-    console.log('Received values:', values);
-    // Здесь вы можете добавить логику для обработки логина
+  const navigate = useNavigate();
+  const [login, { isLoading }] = useLoginMutation();
+  const { message } = App.useApp();
+
+  const onFinish = async (values: LoginValues) => {
+    try {
+      await login(values).unwrap();
+      message.success('Login successful!');
+
+      navigate(routes.dashboard.path);
+    } catch (error) {
+      console.error('Login failed:', error);
+      message.error('Login failed. Please check your credentials.');
+    }
   };
 
   const { Title } = Typography;
@@ -29,7 +48,7 @@ export function Login() {
               >
                 <Input
                   placeholder='Enter your email'
-                  style={{ padding: '16px 12px 16px 12px' }}
+                  style={{ padding: '16px 12px' }}
                 />
               </Form.Item>
 
@@ -41,7 +60,7 @@ export function Login() {
                 ]}
               >
                 <Input.Password
-                  style={{ padding: '16px 12px 16px 12px' }}
+                  style={{ padding: '16px 12px' }}
                   placeholder='Enter your password'
                 />
               </Form.Item>
@@ -51,6 +70,7 @@ export function Login() {
                 type='primary'
                 htmlType='submit'
                 block
+                loading={isLoading}
                 style={{ marginTop: 24, padding: '18px' }}
               >
                 Log in

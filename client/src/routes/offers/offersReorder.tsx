@@ -35,18 +35,11 @@ export function OffersReorder() {
     try {
       const orderedOffers = currentOrder.map((offer, index) => ({
         id: offer.id,
-        order_number: index + 1, // Присваиваем новый порядок
+        order_number: index + 1,
       }));
 
-      // Логируем данные, которые отправляются
-      console.log('Sending ordered offers:', JSON.stringify(orderedOffers));
+      await updateOfferOrder(orderedOffers).unwrap();
 
-      // Отправляем запрос на сервер с обновленным порядком
-      const response = await updateOfferOrder(orderedOffers).unwrap();
-
-      console.log('Confirmed order response:', response); // Логируем успешный ответ
-
-      // Обновляем список предложений
       refetch();
       setIsDragged(false);
     } catch (error) {

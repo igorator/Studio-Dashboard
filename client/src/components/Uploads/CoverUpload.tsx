@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { App, Upload, GetProp, UploadProps, UploadFile } from 'antd';
@@ -46,65 +47,39 @@ export const CoverUpload: React.FC<{
     return validFormat && validSize;
   };
 
-  const handleChange: UploadProps['onChange'] = (info) => {
-    const { fileList } = info;
-
-    // Если файл загружается
-    if (info.file.status === 'uploading') {
-      setLoading(true);
-    }
-
-    // Если загрузка завершена
-    if (info.file.status === 'done') {
-      setLoading(false);
-      setFileList(fileList);
-      onChange?.(fileList[0].originFileObj as FileType);
-    } else if (info.file.status === 'error') {
-      setLoading(false);
-      message.error('Upload failed');
-    }
-  };
-
   const handleRemove = (file: UploadFile) => {
     const newFileList = fileList.filter((f) => f.uid !== file.uid);
     setFileList(newFileList);
     onChange?.(null);
   };
 
-  const handleCustomRequest = (info) => {
-    const { file, onSuccess, onError } = info;
+  const handleCustomRequest = (options: any) => {
+    const { file, onSuccess, onError } = options;
 
-    console.log('Custom request for file:', file);
     setLoading(true);
 
-    // Имитируем загрузку
-    setTimeout(() => {
-      console.log('Simulating upload...');
-      const isSuccess = true;
+    const isSuccess = true;
 
-      if (isSuccess) {
-        const newFileList = [
-          {
-            uid: file.uid,
-            name: file.name,
-            status: 'done' as UploadFile['status'],
-            url: URL.createObjectURL(file),
-            thumbUrl: URL.createObjectURL(file),
-            originFileObj: file,
-          },
-        ];
+    if (isSuccess) {
+      const newFileList = [
+        {
+          uid: file.uid,
+          name: file.name,
+          status: 'done' as UploadFile['status'],
+          url: URL.createObjectURL(file),
+          thumbUrl: URL.createObjectURL(file),
+          originFileObj: file,
+        },
+      ];
 
-        setFileList(newFileList);
-        onChange?.(file);
-        onSuccess(file);
-        console.log('Upload successful');
-      } else {
-        onError(new Error('Upload error'));
-        console.log('Upload failed');
-      }
+      setFileList(newFileList);
+      onChange?.(file);
+      onSuccess(file);
+    } else {
+      onError(new Error('Upload error'));
+    }
 
-      setLoading(false);
-    }, 1000);
+    setLoading(false);
   };
 
   const uploadButton = (
@@ -126,7 +101,6 @@ export const CoverUpload: React.FC<{
       listType='picture-card'
       onRemove={handleRemove}
       beforeUpload={beforeUpload}
-      onChange={handleChange}
       fileList={fileList}
       customRequest={handleCustomRequest}
     >

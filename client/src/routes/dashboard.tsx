@@ -4,7 +4,7 @@ import { useGetOffersQuery } from '../redux/services/offerApi';
 import { useGetLeadsQuery } from '../redux/services/leadApi';
 import { ProjectCard } from '../components/Cards/ProjectCard';
 import { OfferCard } from '../components/Cards/OfferCard';
-import { LeadsTable } from '../components/Tables/LeadsTable';
+import { LeadsTable } from '../components/Tables/LeadsTable/LeadsTable';
 import { WrapperCard } from '../components/Cards/WrapperCard';
 import { EyeOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';

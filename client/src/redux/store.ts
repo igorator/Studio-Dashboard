@@ -5,6 +5,7 @@ import { projectApi } from './services/projectApi';
 import { leadApi } from './services/leadApi';
 import { offerApi } from './services/offerApi';
 import { teamMemberApi } from './services/teamApi';
+import { userApi } from './services/userApi';
 
 export const store = configureStore({
   reducer: {
@@ -14,13 +15,15 @@ export const store = configureStore({
     [leadApi.reducerPath]: leadApi.reducer,
     [offerApi.reducerPath]: offerApi.reducer,
     [teamMemberApi.reducerPath]: teamMemberApi.reducer,
+    [userApi.reducerPath]: userApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
       .concat(projectApi.middleware)
       .concat(leadApi.middleware)
       .concat(offerApi.middleware)
-      .concat(teamMemberApi.middleware),
+      .concat(teamMemberApi.middleware)
+      .concat(userApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

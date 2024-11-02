@@ -116,13 +116,11 @@ exports.reorderOffers = async (req, res) => {
   try {
     let offers = req.body;
 
-    //console.log('Received offers:', JSON.stringify(offers));
-
     if (!Array.isArray(offers) && typeof offers === 'object') {
       const offerArray = Object.values(offers).filter(
         (item) => typeof item === 'object' && item !== null,
       );
-      console.log('Converted offers to array:', JSON.stringify(offerArray));
+
       offers = offerArray;
     }
 
@@ -134,7 +132,7 @@ exports.reorderOffers = async (req, res) => {
 
     for (const offer of offers) {
       await Offer.update(
-        { order_number: offer.order_number }, // Предполагается, что order_number передается в запросе
+        { order_number: offer.order_number },
         { where: { id: offer.id }, transaction },
       );
     }

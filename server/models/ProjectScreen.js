@@ -9,18 +9,18 @@ const ProjectScreen = sequelize.define('ProjectScreen', {
       model: Media,
       key: 'id',
     },
-    onDelete: 'CASCADE', // Удаление записи в Media при удалении скриншота
+    onDelete: 'CASCADE',
   },
   project_id: {
     type: DataTypes.INTEGER,
     references: {
-      model: 'Projects', // Модель Project
+      model: 'Projects',
       key: 'id',
     },
-    onDelete: 'CASCADE', // Каскадное удаление скриншотов при удалении проекта
+    onDelete: 'CASCADE',
   },
 });
 
-ProjectScreen.belongsTo(Media, { foreignKey: 'media_id' }); // Связь с таблицей Media
+ProjectScreen.belongsTo(Media, { foreignKey: 'media_id' });
 
 module.exports = ProjectScreen;

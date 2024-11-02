@@ -35,18 +35,11 @@ export function ProjectsReorder() {
     try {
       const orderedProjects = currentOrder.map((project, index) => ({
         id: project.id,
-        order_number: index + 1, // Назначаем новый порядок
+        order_number: index + 1,
       }));
 
-      // Логируем данные, которые будут отправлены
-      console.log('Sending ordered projects:', JSON.stringify(orderedProjects));
+      await updateProjectOrder(orderedProjects).unwrap();
 
-      // Отправляем запрос на сервер с обновленным порядком
-      const response = await updateProjectOrder(orderedProjects).unwrap();
-
-      console.log('Confirmed order response:', response); // Логируем успешный ответ
-
-      // Обновляем проекты
       refetch();
       setIsDragged(false);
     } catch (error) {

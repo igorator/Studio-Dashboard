@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import { App, Upload, UploadProps, Button, UploadFile } from 'antd';
+import { App, Upload, Button, UploadFile } from 'antd';
 import { isValidImageFormat } from '../../utils/files/isValidImageFormat';
 import { isValidImageSize } from '../../utils/files/isValidImageSize';
 import {
@@ -15,6 +16,7 @@ import {
   useSortable,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
+
 import { CSS } from '@dnd-kit/utilities';
 
 const DraggableUploadListItem = ({
@@ -116,39 +118,36 @@ export const ScreensUpload: React.FC<{
     }
   };
 
-  const handleChange: UploadProps['onChange'] = (info) => {
-    if (info.file.status === 'uploading') {
-      setLoading(true);
-    } else if (info.file.status === 'done') {
-      setLoading(false);
-      const updatedFileList = [...info.fileList];
-      setFileList(updatedFileList);
-      onChange?.(updatedFileList);
-    } else if (info.file.status === 'error') {
-      setLoading(false);
-      message.error('Upload failed');
-    }
-  };
-
   const handleRemove = (file: UploadFile) => {
     const newFileList = fileList.filter((f) => f.uid !== file.uid);
     setFileList(newFileList);
-    onChange?.(newFileList); // Call onChange after updating the state
+    onChange?.(newFileList);
   };
 
-  const handleCustomRequest = (info) => {
-    const { file, onSuccess, onError } = info;
+  const handleCustomRequest = (options: any) => {
+    const { file, onSuccess, onError } = options;
 
     setLoading(true);
     const isSuccess = true;
     if (isSuccess) {
-      const updatedFileList = [file, ...fileList];
+      const updatedFileList = [
+        {
+          uid: file.uid,
+          name: file.name,
+          status: 'done' as UploadFile['status'],
+          url: URL.createObjectURL(file),
+          thumbUrl: URL.createObjectURL(file),
+          originFileObj: file,
+        },
+        ...fileList,
+      ];
+
       console.log(updatedFileList);
       setFileList(updatedFileList);
       onChange?.(updatedFileList);
-      onSuccess(file);
+      onSuccess?.(file as UploadFile);
     } else {
-      onError(new Error('Upload error'));
+      onError?.(new Error('Upload error'));
     }
     setLoading(false);
   };
@@ -177,7 +176,6 @@ export const ScreensUpload: React.FC<{
           listType='picture'
           maxCount={4}
           beforeUpload={beforeUpload}
-          onChange={handleChange}
           fileList={fileList}
           onRemove={handleRemove}
           customRequest={handleCustomRequest}

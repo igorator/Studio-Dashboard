@@ -1,4 +1,4 @@
-import type { FormProps } from 'antd';
+import type { FormProps, UploadFile } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { App, Button, Switch, Form, Input, Flex } from 'antd';
 import { CoverUpload } from '../Uploads/CoverUpload';
@@ -39,12 +39,6 @@ const projectLinksFields = [
   { label: 'Upwork', name: 'upwork' },
 ];
 
-const onFinishFailed: FormProps<ProjectFieldType>['onFinishFailed'] = (
-  errorInfo,
-) => {
-  console.log('Failed:', errorInfo);
-};
-
 export const ProjectForm = ({
   project,
   refetchProject,
@@ -57,6 +51,13 @@ export const ProjectForm = ({
   const [addProject] = useAddProjectMutation();
   const [editProject] = useEditProjectMutation();
   const [isDirty, setIsDirty] = useState(false);
+
+  const onFinishFailed: FormProps<ProjectFieldType>['onFinishFailed'] = (
+    error,
+  ) => {
+    console.log(error);
+    message.error('Please fill in all required fields correctly');
+  };
 
   const onFinish: FormProps<ProjectFieldType>['onFinish'] = async (
     formData,
@@ -96,7 +97,7 @@ export const ProjectForm = ({
         );
       }
 
-      for (let pair of formDataToSend.entries()) {
+      for (const pair of formDataToSend.entries()) {
         console.log(pair[0] + ': ' + pair[1]);
       }
 
@@ -123,11 +124,11 @@ export const ProjectForm = ({
 
   const initialValues = project
     ? {
+        cover: project.cover_id,
         title_eng: project.title_eng,
         description_eng: project.description_eng,
         title_ua: project.title_ua,
         description_ua: project.description_ua,
-        cover: project.cover_id,
         screens: project.screens_ids,
         social_urls: project.social_urls,
         isOnSite: project.isOnSite || false,
@@ -229,7 +230,11 @@ export const ProjectForm = ({
         <Form.Item
           label='Project Screens'
           name='screens'
-          getValueFromEvent={(e) => e}
+          getValueFromEvent={(e) => {
+            return e.map((file: UploadFile) => {
+              return file.originFileObj as File;
+            });
+          }}
         >
           <ScreensUpload initialScreensIds={project?.screens_ids} />
         </Form.Item>

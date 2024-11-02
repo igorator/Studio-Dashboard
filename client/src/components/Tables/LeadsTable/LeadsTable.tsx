@@ -5,16 +5,17 @@ import {
   EyeInvisibleOutlined,
   DeleteOutlined,
 } from '@ant-design/icons';
-import { Lead } from '../../data/types';
-import { CustomModal } from '../CustomModal';
+import { Lead } from '../../../data/types';
+import { CustomModal } from '../../CustomModal';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
-import { routes } from '../../data/routes-config';
+import { routes } from '../../../data/routes-config';
 import {
   useCheckLeadByIdMutation,
   useDeleteLeadMutation,
-} from '../../redux/services/leadApi';
+} from '../../../redux/services/leadApi';
 import { App } from 'antd';
+import './leads-table.css';
 
 type LeadsTableProps = {
   leads: Lead[];
@@ -112,6 +113,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
 
   return (
     <Table
+      rowClassName={(lead: Lead) => (lead.is_checked ? 'checked-row' : '')}
       dataSource={leads}
       columns={columns}
       rowKey='id'
