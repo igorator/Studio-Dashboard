@@ -5,12 +5,14 @@ export const teamMemberApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API_URL,
   }),
+  tagTypes: ['TeamMemberList'],
   endpoints: (builder) => ({
     getTeamMemberById: builder.query({
       query: (id) => `team/${id}`,
     }),
     getTeamMembers: builder.query({
       query: () => 'team',
+      providesTags: ['TeamMemberList'],
     }),
     addTeamMember: builder.mutation({
       query: (newMember) => ({
@@ -18,6 +20,7 @@ export const teamMemberApi = createApi({
         method: 'POST',
         body: newMember,
       }),
+      invalidatesTags: ['TeamMemberList'],
     }),
     editTeamMember: builder.mutation({
       query: ({ id, updates }) => ({
@@ -25,12 +28,14 @@ export const teamMemberApi = createApi({
         method: 'PUT',
         body: updates,
       }),
+      invalidatesTags: ['TeamMemberList'],
     }),
     deleteTeamMember: builder.mutation({
       query: (id) => ({
         url: `team/${id}`,
         method: 'DELETE',
       }),
+      invalidatesTags: ['TeamMemberList'],
     }),
     reorderTeamMembers: builder.mutation({
       query: (order) => ({
@@ -38,6 +43,7 @@ export const teamMemberApi = createApi({
         method: 'POST',
         body: order,
       }),
+      invalidatesTags: ['TeamMemberList'],
     }),
   }),
 });

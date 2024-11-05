@@ -93,7 +93,7 @@ export const ProjectForm = ({
         formDataToSend.append('screens', JSON.stringify([]));
       } else {
         formData.screens.forEach((screen) =>
-          formDataToSend.append('screens[]', screen),
+          formDataToSend.append('screens', screen),
         );
       }
 
@@ -112,6 +112,7 @@ export const ProjectForm = ({
         refetchProject && refetchProject();
       } else {
         const response = await addProject(formDataToSend);
+        refetchProject && refetchProject();
         message.success('Project created');
         console.log('New project created:', response);
         navigate(routes.projects.path);

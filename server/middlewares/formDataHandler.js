@@ -1,16 +1,10 @@
 const multer = require('multer');
 
-// Настройка multer для хранения файлов в памяти
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-// Универсальный middleware для обработки FormData
 const formDataHandler = () => {
   return (req, res, next) => {
-    if (req.body && req.body.processed) {
-      return next();
-    }
-
     upload.any()(req, res, (err) => {
       if (err) {
         return res
@@ -20,49 +14,29 @@ const formDataHandler = () => {
 
       const data = { ...req.body };
 
-      // Обработка загруженных файлов
       if (req.files) {
         req.files.forEach((file) => {
-          // Проверка поля photo (если это поле фото)
-          if (file.fieldname === 'photo') {
-            data.photo = {
-              originalname: file.originalname,
-              buffer: file.buffer,
-              mimetype: file.mimetype,
-            };
+          console.log(`Processing file: ${file.fieldname}`);
+
+          if (data[file.fieldname] === undefined) {
+            data[file.fieldname] = [];
           }
 
-          // Проверяем имя поля cover
-          else if (file.fieldname === 'cover') {
-            data.cover = {
-              originalname: file.originalname,
-              buffer: file.buffer,
-              mimetype: file.mimetype,
-            };
-          }
-
-          // Проверка на screens (массив скриншотов)
-          else if (file.fieldname.startsWith('screens')) {
-            if (!data.screens) {
-              data.screens = [];
-            }
-            data.screens.push({
+          if (Array.isArray(data[file.fieldname])) {
+            data[file.fieldname].push({
               originalname: file.originalname,
               buffer: file.buffer,
               mimetype: file.mimetype,
             });
+          } else {
+            data[file.fieldname] = {
+              originalname: file.originalname,
+              buffer: file.buffer,
+              mimetype: file.mimetype,
+            };
           }
         });
       }
-
-      // Убедимся, что все данные обработаны корректно
-      data.cover = data.cover || null;
-      data.screens = data.screens || [];
-      data.photo = data.photo || null;
-
-      data.processed = true;
-
-      // Обновляем req.body
       req.body = data;
 
       next();

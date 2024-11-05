@@ -15,7 +15,12 @@ export function TeamMemberDetails() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [deleteTeamMember] = useDeleteTeamMemberMutation();
-  const { data: teamMember, error, isLoading } = useGetTeamMemberByIdQuery(id!);
+  const {
+    data: teamMember,
+    error,
+    isLoading,
+    refetch,
+  } = useGetTeamMemberByIdQuery(id!);
 
   const handleDelete = async () => {
     try {
@@ -51,7 +56,7 @@ export function TeamMemberDetails() {
         />
       }
     >
-      <TeamForm teamMember={teamMember} />
+      <TeamForm teamMember={teamMember} refetchTeamMember={refetch} />
     </WrapperCard>
   );
 }

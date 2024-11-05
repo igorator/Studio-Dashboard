@@ -6,7 +6,7 @@ import {
   useEditTeamMemberMutation,
 } from '../../redux/services/teamApi';
 import { routes } from '../../data/routes-config';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 type TeamMemberBaseType = {
@@ -28,13 +28,16 @@ type TeamMemberEntryDataType = TeamMemberBaseType & {
 
 export const TeamForm = ({
   teamMember,
+  refetchTeamMember,
 }: {
   teamMember?: TeamMemberEntryDataType;
+  refetchTeamMember?: () => void;
 }) => {
   const { message } = App.useApp();
   const [addTeamMember] = useAddTeamMemberMutation();
   const [editTeamMember] = useEditTeamMemberMutation();
   const [isDirty, setIsDirty] = useState(false);
+  const navigate = useNavigate();
 
   const onFinishFailed: FormProps<TeamMemberFieldType>['onFinishFailed'] =
     () => {
@@ -65,8 +68,10 @@ export const TeamForm = ({
         });
 
         message.success('Team member updated');
+        refetchTeamMember && refetchTeamMember();
       } else {
         await addTeamMember(formDataToSend);
+        navigate(routes.team.path);
         message.success('Team member created');
       }
 
