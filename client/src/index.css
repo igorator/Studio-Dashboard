@@ -1,0 +1,77 @@
+@import url('non.geist/mono');
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  color: white;
+  font-family: 'Geist Mono Variable';
+  --default-blur: blur(2px);
+  --default-padding-lg: 48px;
+  --default-padding-sm: 24px;
+  --primary-background: transparent;
+  background-color: black;
+}
+
+.primary-layout {
+  min-height: 100dvh;
+  overflow: hidden;
+  width: 100%;
+}
+
+.secondary-layout {
+  background-color: var(--primary-background);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--primary-background);
+  backdrop-filter: var(--default-blur);
+  padding: 0 var(--default-padding-sm);
+}
+
+.sider {
+  padding-left: 10px;
+  background-color: var(--primary-background) !important;
+  backdrop-filter: var(--default-blur);
+  padding-top: var(--default-padding-sm);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 36px;
+  padding: var(--default-padding-sm);
+  backdrop-filter: var(--default-blur);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  background-color: var(--primary-background);
+  backdrop-filter: var(--default-blur);
+  justify-content: center;
+  padding: var(--default-padding-sm);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #666;
+  border-radius: 8px;
+  transition: background-color 0.6s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #444;
+}
